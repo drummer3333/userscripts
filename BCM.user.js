@@ -5,7 +5,6 @@
 // @description  try to take over the world!
 // @author       You
 // @require      https://code.jquery.com/jquery-3.2.1.min.js
-// @match        https://bcm.*.com/worktime/overview.htm*
 // @grant        none
 // ==/UserScript==
 
