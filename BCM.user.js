@@ -28,7 +28,11 @@
 
                 var cellCurrHours = $(elem).find(':nth-Child(9)');
                 if (cellCurrHours.length > 0 && cellCurrHours.text().trim() != '<br>') {
-                    var diff = parseHours(cellCurrHours.text()) - minsPerDay;
+                    var diff = parseHours(cellCurrHours.text());
+                    if (!$(elem).hasClass('weekendRow')) {
+                        diff -= minsPerDay;
+                    }
+                    
                     if (!isNaN(diff)) {
                         newCell.text(showHoursMin(diff));
                         monthdiff += diff;
