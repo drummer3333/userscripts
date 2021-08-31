@@ -8,51 +8,40 @@
 // @grant        none
 // ==/UserScript==
 
+'use strict';
+
 (function() {
-    'use strict';
+
     $(document).ready(function() {
         var minsPerDay = Number.parseFloat($('table.table2 td.table2Col6').first().text().replace(',', '.')) / 5 * 60;
         var monthdiff = 0;
         $('.mainTable tr').each(function(index, elem) {
-            if (index == 0) {
-                $(elem).find('#closeBorderUpRight').attr('colspan', 5);
-            }
-            else if (index == 1) {
-                $(elem).find(':contains(Mehr)').before('<td class="mainTableDark4Col">Differenz</td>');
-            }
-            else if ($(elem).children().length == 17){
-                var cell = $(elem).find(':nth-Child(10)');
-                var newCell = cell.clone();
-
-                cell.before(newCell);
-
-                var cellCurrHours = $(elem).find(':nth-Child(9)');
-                if (cellCurrHours.length > 0 && cellCurrHours.text().trim() != '<br>') {
-                    var diff = parseHours(cellCurrHours.text());
-                    if (!$(elem).hasClass('weekendRow')) {
-                        diff -= minsPerDay;
-                    }
-                    
-                    if (!isNaN(diff)) {
-                        newCell.text(showHoursMin(diff));
-                        monthdiff += diff;
-                    }
+            if ($(elem).children().length == 15){
+                var cellIs = $(elem).find(':nth-Child(10)');
+                var celldiff = $(elem).find(':nth-Child(11)');
+                if (celldiff.length > 0 && cellIs.html().trim() != '<br>') {
+                    var diff = parseHours(celldiff.text().trim());
+                    monthdiff += diff;
                 }
             }
         });
 
         var lastRow = $('.mainTable .lastRow');
-        var cell = lastRow.find(':nth-Child(10)');
+        var cell = lastRow.find(':nth-Child(11)');
         var sum = cell.clone();
-        cell.before(sum);
+        cell.after(sum);
         sum.text(showHoursMin(monthdiff));
     });
 
     function parseHours(s) {
+        var factor = 1;
+        if (s[0] == "-") {
+            s = s.substring(1);
+            factor = -1;
+        }
 
         var a = s.split(':'); // split it at the colons
-
-        return (+a[0] * 60) + (+a[1]);
+        return factor * ((+a[0] * 60) + (+a[1]));
     }
 
     function showHoursMin(n) {
